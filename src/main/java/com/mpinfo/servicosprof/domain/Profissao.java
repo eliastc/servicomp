@@ -1,12 +1,15 @@
 package com.mpinfo.servicosprof.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Profissao implements Serializable{
@@ -16,6 +19,9 @@ public class Profissao implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
+	
+	@ManyToMany(mappedBy = "profissoes")
+	private List<Profissional> profissionais = new ArrayList<>();
 	
 	public Profissao() {		
 	}
@@ -41,6 +47,14 @@ public class Profissao implements Serializable{
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+	
+	public List<Profissional> getProfissionais() {
+		return profissionais;
+	}
+
+	public void setProfissionais(List<Profissional> profissionais) {
+		this.profissionais = profissionais;
+	}
 
 	@Override
 	public int hashCode() {
@@ -58,6 +72,4 @@ public class Profissao implements Serializable{
 		Profissao other = (Profissao) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
 }

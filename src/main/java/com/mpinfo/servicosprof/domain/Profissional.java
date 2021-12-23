@@ -1,25 +1,46 @@
 package com.mpinfo.servicosprof.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+
+@Entity
 public class Profissional implements Serializable{	
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
 	private String whatsapp;
-	private String curriculo;
+	private String formacao;
+	
+	@ManyToMany
+	@JoinTable(
+			name = "PROFISSIONAL_PROFISSAO",
+			joinColumns = @JoinColumn(name = "profissional_id"),
+			inverseJoinColumns = @JoinColumn(name = "profissao_id")
+			)
+	private List<Profissao> profissoes = new ArrayList<>();
 	
 	public Profissional() {		
 	}
 
-	public Profissional(Long id, String nome, String whatsapp, String curriculo) {
+	public Profissional(Long id, String nome, String whatsapp, String formacao) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.whatsapp = whatsapp;
-		this.curriculo = curriculo;
+		this.formacao = formacao;
 	}
 
 	public Long getId() {
@@ -46,14 +67,22 @@ public class Profissional implements Serializable{
 		this.whatsapp = whatsapp;
 	}
 
-	public String getCurriculo() {
-		return curriculo;
+	public String getFormacao() {
+		return formacao;
 	}
 
-	public void setCurriculo(String curriculo) {
-		this.curriculo = curriculo;
+	public void setFormacao(String formacao) {
+		this.formacao = formacao;
+	}
+	
+	public List<Profissao> getProfissoes() {
+		return profissoes;
 	}
 
+	public void setProfissoes(List<Profissao> profissoes) {
+		this.profissoes = profissoes;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -70,7 +99,4 @@ public class Profissional implements Serializable{
 		Profissional other = (Profissional) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
-
 }
