@@ -18,10 +18,8 @@ public class ProfissaoResource {
 	private ProfissaoService service;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> find(@PathVariable Long id) {
-		
-		Profissao obj = service.find(id);
-		
+	public ResponseEntity<?> find(@PathVariable Long id) {		
+		Profissao obj = service.find(id);		
 		return ResponseEntity.ok(obj);
 	}
 }

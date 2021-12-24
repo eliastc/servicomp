@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.mpinfo.servicosprof.domain.Profissao;
 import com.mpinfo.servicosprof.repositories.ProfissaoRepository;
+import com.mpinfo.servicosprof.services.exceptions.ExcessaoNaoEncontradaException;
 
 @Service
 public class ProfissaoService {
@@ -16,7 +17,7 @@ public class ProfissaoService {
 	
 	public Profissao find(Long id) {
 		Optional<Profissao> obj = repo.findById(id);
-		return obj.orElse(null);
+		return obj.orElseThrow(() -> new ExcessaoNaoEncontradaException("Objeto não encontrado! Id: " + id +
+				", Tipo: " + Profissao.class.getName()));
 		}
-
 }

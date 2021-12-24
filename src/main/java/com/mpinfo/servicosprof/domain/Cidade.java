@@ -1,38 +1,36 @@
 package com.mpinfo.servicosprof.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
-public class Profissao implements Serializable{
+public class Cidade implements Serializable{	
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
 	
-	@JsonManagedReference
-	@ManyToMany(mappedBy = "profissoes")
-	private List<Profissional> profissionais = new ArrayList<>();
+	@ManyToOne
+	@JoinColumn(name = "estado_id")
+	private Estado estado;
 	
-	public Profissao() {		
+	public Cidade() {		
 	}
-
-	public Profissao(Long id, String nome) {
+	
+	public Cidade(Long id, String nome, Estado estado) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.estado = estado;
 	}
 
 	public Long getId() {
@@ -50,13 +48,13 @@ public class Profissao implements Serializable{
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	public List<Profissional> getProfissionais() {
-		return profissionais;
+
+	public Estado getEstado() {
+		return estado;
 	}
 
-	public void setProfissionais(List<Profissional> profissionais) {
-		this.profissionais = profissionais;
+	public void setEstado(Estado estado) {
+		this.estado = estado;
 	}
 
 	@Override
@@ -72,7 +70,7 @@ public class Profissao implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Profissao other = (Profissao) obj;
+		Cidade other = (Cidade) obj;
 		return Objects.equals(id, other.id);
 	}
 }

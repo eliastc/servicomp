@@ -9,12 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import javax.persistence.OneToMany;
 
 @Entity
-public class Profissao implements Serializable{
+public class Estado implements Serializable{	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -22,14 +20,13 @@ public class Profissao implements Serializable{
 	private Long id;
 	private String nome;
 	
-	@JsonManagedReference
-	@ManyToMany(mappedBy = "profissoes")
-	private List<Profissional> profissionais = new ArrayList<>();
+	@OneToMany(mappedBy = "estado")
+	private List<Cidade> cidades = new ArrayList<>();
 	
-	public Profissao() {		
+	public Estado() {
 	}
 
-	public Profissao(Long id, String nome) {
+	public Estado(Long id, String nome) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -50,13 +47,13 @@ public class Profissao implements Serializable{
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	public List<Profissional> getProfissionais() {
-		return profissionais;
+
+	public List<Cidade> getCidades() {
+		return cidades;
 	}
 
-	public void setProfissionais(List<Profissional> profissionais) {
-		this.profissionais = profissionais;
+	public void setCidades(List<Cidade> cidades) {
+		this.cidades = cidades;
 	}
 
 	@Override
@@ -72,7 +69,7 @@ public class Profissao implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Profissao other = (Profissao) obj;
+		Estado other = (Estado) obj;
 		return Objects.equals(id, other.id);
 	}
 }
