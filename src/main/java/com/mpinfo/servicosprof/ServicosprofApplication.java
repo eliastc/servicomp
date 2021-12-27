@@ -1,5 +1,7 @@
 package com.mpinfo.servicosprof;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,18 +9,27 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.mpinfo.servicosprof.domain.Chamado;
 import com.mpinfo.servicosprof.domain.Cidade;
 import com.mpinfo.servicosprof.domain.Cliente;
 import com.mpinfo.servicosprof.domain.Endereco;
 import com.mpinfo.servicosprof.domain.Estado;
+import com.mpinfo.servicosprof.domain.ItemChamado;
+import com.mpinfo.servicosprof.domain.Pagamento;
+import com.mpinfo.servicosprof.domain.PagamentoComCartao;
+import com.mpinfo.servicosprof.domain.PagamentoComPix;
 import com.mpinfo.servicosprof.domain.Profissao;
 import com.mpinfo.servicosprof.domain.Profissional;
+import com.mpinfo.servicosprof.domain.enums.EstadoPagamento;
 import com.mpinfo.servicosprof.domain.enums.TipoClassificacao;
 import com.mpinfo.servicosprof.domain.enums.TipoCliente;
+import com.mpinfo.servicosprof.repositories.ChamadoRepository;
 import com.mpinfo.servicosprof.repositories.CidadeRepository;
 import com.mpinfo.servicosprof.repositories.ClienteRepository;
 import com.mpinfo.servicosprof.repositories.EnderecoRepository;
 import com.mpinfo.servicosprof.repositories.EstadoRepository;
+import com.mpinfo.servicosprof.repositories.ItemChamadoRepository;
+import com.mpinfo.servicosprof.repositories.PagamentoRepository;
 import com.mpinfo.servicosprof.repositories.ProfissaoRepository;
 import com.mpinfo.servicosprof.repositories.ProfissionalRepository;
 
@@ -43,6 +54,15 @@ public class ServicosprofApplication implements CommandLineRunner {
 	
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	private ChamadoRepository chamadoRepository;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemChamadoRepository itemChamadoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ServicosprofApplication.class, args);
@@ -103,6 +123,33 @@ public class ServicosprofApplication implements CommandLineRunner {
 		
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		enderecoRepository.saveAll(Arrays.asList(end1));
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
+		Chamado cha1 = new Chamado(null, sdf.parse("26/12/2021 13:45"), "Notebook não liga", cli1, end1);
+		Chamado cha2 = new Chamado(null, sdf.parse("26/12/2021 13:50"), "Ação trabalhista", cli1, end1);
+		
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, cha1, 2);
+		cha1.setPagamento(pagto1);
+		
+		Pagamento pagto2 = new PagamentoComPix(null, EstadoPagamento.PENDENTE, cha2, sdf.parse("10/01/2022 15:00"), null);
+		cha2.setPagamento(pagto2);
+		
+		cli1.getChamados().addAll(Arrays.asList(cha1, cha2));
+		
+		chamadoRepository.saveAll(Arrays.asList(cha1, cha2));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
+		
+		ItemChamado ip1 = new ItemChamado(cha1, tec, new BigDecimal("0.00"), new BigDecimal("100.00"), 4);
+		ItemChamado ip2 = new ItemChamado(cha2, adv, new BigDecimal("0.00"), new BigDecimal("7000.00"), 3);
+		
+		cha1.getItens().addAll(Arrays.asList(ip1));
+		cha2.getItens().addAll(Arrays.asList(ip2));
+		
+		tec.getItens().addAll(Arrays.asList(ip1));
+		adv.getItens().addAll(Arrays.asList(ip2));
+		
+		itemChamadoRepository.saveAll(Arrays.asList(ip1, ip2));
 	}
 
 }

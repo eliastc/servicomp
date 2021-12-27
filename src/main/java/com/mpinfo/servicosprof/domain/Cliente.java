@@ -15,6 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mpinfo.servicosprof.domain.enums.TipoClassificacao;
 import com.mpinfo.servicosprof.domain.enums.TipoCliente;
 
@@ -31,6 +33,8 @@ public class Cliente implements Serializable{
 	private Integer classificacao;
 	private Integer tipo;
 	
+	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
 	
@@ -38,6 +42,11 @@ public class Cliente implements Serializable{
 	@CollectionTable(name = "TELEFONE")
 	private Set<String> telefones = new HashSet<>();
 	
+	@JsonBackReference
+	@OneToMany(mappedBy = "cliente")
+	private List<Chamado> chamados = new ArrayList<>();
+	
+	// talvez tenha que associar o chamado com o cliente e com o profissional
 	public Cliente() {		
 	}
 
@@ -116,6 +125,15 @@ public class Cliente implements Serializable{
 		this.telefones = telefones;
 	}
 
+	
+	public List<Chamado> getChamados() {
+		return chamados;
+	}
+
+	public void setChamados(List<Chamado> chamados) {
+		this.chamados = chamados;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

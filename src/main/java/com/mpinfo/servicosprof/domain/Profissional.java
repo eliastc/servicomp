@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,8 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Profissional implements Serializable{	
@@ -30,11 +30,7 @@ public class Profissional implements Serializable{
 	private String celular;
 	private String formacao;
 	private Integer classificacao;
-	/*
-	@ElementCollection
-	@CollectionTable(name = "TELEFONE")
-	private Set<String> telefones = new HashSet<>();
-	*/
+	
 	@JsonBackReference
 	@ManyToMany
 	@JoinTable(
@@ -44,6 +40,12 @@ public class Profissional implements Serializable{
 			)
 	private List<Profissao> profissoes = new ArrayList<>();
 	
+	@JsonIgnore
+	@OneToMany(mappedBy = "id.profissional")
+	private Set<ItemChamado> itens = new HashSet<>();
+	
+	
+	// talvez tenha que associar o chamado com o cliente e com o profissional
 	public Profissional() {		
 	}
 
@@ -56,6 +58,15 @@ public class Profissional implements Serializable{
 		this.setClassificacao(classificacao);
 	}
 
+	@JsonIgnore
+	public List<Chamado> getChamados() {
+		List<Chamado> lista = new ArrayList<>();
+		for(ItemChamado x: itens) {
+			lista.add(x.getChamado());
+		}
+		return lista;
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -103,15 +114,16 @@ public class Profissional implements Serializable{
 	public void setProfissoes(List<Profissao> profissoes) {
 		this.profissoes = profissoes;
 	}
-/*	
-	public Set<String> getTelefones() {
-		return telefones;
+	
+
+	public Set<ItemChamado> getItens() {
+		return itens;
 	}
 
-	public void setTelefones(Set<String> telefones) {
-		this.telefones = telefones;
+	public void setItens(Set<ItemChamado> itens) {
+		this.itens = itens;
 	}
-	*/
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -128,5 +140,4 @@ public class Profissional implements Serializable{
 		Profissional other = (Profissional) obj;
 		return Objects.equals(id, other.id);
 	}
-	
 }
