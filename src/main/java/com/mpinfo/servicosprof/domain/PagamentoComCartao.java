@@ -2,28 +2,30 @@ package com.mpinfo.servicosprof.domain;
 
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.mpinfo.servicosprof.domain.enums.EstadoPagamento;
 
 @Entity
+@JsonTypeName("pagamentoComCartao")
 public class PagamentoComCartao extends Pagamento {
 	private static final long serialVersionUID = 1L;
 	
-	private Integer numerodeParcelas;
+	private Integer numeroDeParcelas;
 	
 	public PagamentoComCartao() {		
 	}
 
-	public PagamentoComCartao(Long id, EstadoPagamento estado, Chamado chamado, Integer numeroDeParcelas) {
+	public PagamentoComCartao(Integer id, EstadoPagamento estado, Chamado chamado, Integer numeroDeParcelas) {
 		super(id, estado, chamado);
-		this.numerodeParcelas = numeroDeParcelas;
+		this.numeroDeParcelas = numeroDeParcelas;
 	}
 
-	public Integer getNumerodeParcelas() {
-		return numerodeParcelas;
+	public Integer getNumeroDeParcelas() {
+		return numeroDeParcelas;
 	}
 
-	public void setNumerodeParcelas(Integer numerodeParcelas) {
-		this.numerodeParcelas = numerodeParcelas;
+	public void setNumeroDeParcelas(Integer numeroDeParcelas) {
+		this.numeroDeParcelas = numeroDeParcelas;
 	}
 	
 	

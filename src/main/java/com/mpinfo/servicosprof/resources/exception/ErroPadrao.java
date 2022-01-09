@@ -6,7 +6,7 @@ public class ErroPadrao implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Integer status;
-	private String msg;
+	private String msg;	
 	private Long timestamp;
 	
 	public ErroPadrao(Integer status, String msg, Long timestamp) {

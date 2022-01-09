@@ -1,6 +1,5 @@
 package com.mpinfo.servicosprof;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
@@ -71,33 +70,54 @@ public class ServicosprofApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		
-		Profissao prof1 = new Profissao(null, "Técnico em Informática");
+		Profissao prof1 = new Profissao(null, "Engenheiro(a) de Software");
 		Profissao prof2 = new Profissao(null, "Advogado(a)");
-		Profissao prof3 = new Profissao(null, "Engenheiro(a)");
+		Profissao prof3 = new Profissao(null, "Engenheiro(a) de Dados");
 		Profissao prof4 = new Profissao(null, "Medico(a)");
 		
+		Profissao prof5 = new Profissao(null, "Engenheiro(a) de Producao");
+		Profissao prof6 = new Profissao(null, "Advogado(a) Trabalista");
+		Profissao prof7 = new Profissao(null, "Engenheiro(a) Civil");
+		Profissao prof8 = new Profissao(null, "Medico(a) Cirurgião");
 		
-		Profissional tec = new Profissional(null, "Elias","(81) 98822.7788", "Bacharel em Sistemas", 3);
+		Profissao prof9 = new Profissao(null, "Pedreiro(a)");
+		Profissao prof10 = new Profissao(null, "Contador");
+		Profissao prof11 = new Profissao(null, "Enfermeiro(a)");
+		Profissao prof12 = new Profissao(null, "Mecanico(a)");
+		Profissao prof13 = new Profissao(null, "Carpinteiro(a)");
+		
+		
+		Profissional tec = new Profissional(null, "Elias Calado", "(81) 98822.7788", "Rua Padre Leonardo Greco, 129", "Cordeiro", "Bacharel em Sistemas", TipoClassificacao.EXCELENTE, 100.00);
 	//	tec.getTelefones().addAll(Arrays.asList("(81) 98824.3638"));
-		Profissional adv = new Profissional(null, "Ana Cristina","(81) 98843.8787", "Bacharel em Direito", 3);
+		Profissional adv = new Profissional(null, "Ana Cristina", "(81) 98843.8787", "Rua Padre Leonardo Greco, 129", "Cordeiro", "Bacharel em Direito", TipoClassificacao.EXCELENTE, 350.00);
 	//	adv.getTelefones().addAll(Arrays.asList("(81) 98842.3639"));
-		Profissional eng = new Profissional(null, "Erisson Alberto","(81) 99887.7552", "Bacharel em Engenharia", 3);
+		Profissional eng = new Profissional(null, "Erisson Alberto", "(81) 99887.7552", "Rua Padre Leonardo Greco, 129", "Cordeiro",  "Bacharel em Engenharia", TipoClassificacao.EXCELENTE, 300.00);
 	//	eng.getTelefones().addAll(Arrays.asList("(81) 98989899"));
-		Profissional dr = new Profissional(null, "Heitor Vinícius","(81) 99778.8112", "Bacharel em Medicina", 3);
+		Profissional dr = new Profissional(null, "Heitor Vinícius", "(81) 99778.8112", "Rua Padre Leonardo Greco, 129", "Cordeiro", "Bacharel em Medicina", TipoClassificacao.EXCELENTE, 550.00);
 	//	dr.getTelefones().addAll(Arrays.asList("(81) 9797979797"));
-		
+			
 		
 		prof1.getProfissionais().addAll(Arrays.asList(tec));
 		prof2.getProfissionais().addAll(Arrays.asList(adv));
 		prof3.getProfissionais().addAll(Arrays.asList(eng));
 		prof4.getProfissionais().addAll(Arrays.asList(dr));
+		prof5.getProfissionais().addAll(Arrays.asList(tec, eng));
+		prof6.getProfissionais().addAll(Arrays.asList(tec, eng, adv));
+		prof7.getProfissionais().addAll(Arrays.asList(dr, eng));
+		prof8.getProfissionais().addAll(Arrays.asList(adv, eng));
+		prof9.getProfissionais().addAll(Arrays.asList(tec, eng, dr, adv));
+		prof10.getProfissionais().addAll(Arrays.asList(tec, eng, dr));
+		prof11.getProfissionais().addAll(Arrays.asList(tec, adv));
+		prof12.getProfissionais().addAll(Arrays.asList(dr, eng, adv));
+		prof13.getProfissionais().addAll(Arrays.asList(adv, dr));
 		
-		tec.getProfissoes().addAll(Arrays.asList(prof1));
-		adv.getProfissoes().addAll(Arrays.asList(prof2));
-		eng.getProfissoes().addAll(Arrays.asList(prof3));
-		dr.getProfissoes().addAll(Arrays.asList(prof4));
+		tec.getProfissoes().addAll(Arrays.asList(prof1, prof5, prof6, prof9, prof10, prof11));
+		adv.getProfissoes().addAll(Arrays.asList(prof2, prof6, prof8, prof9, prof11, prof12, prof13));
+		eng.getProfissoes().addAll(Arrays.asList(prof3, prof5, prof6, prof7, prof8, prof9, prof10, prof12, prof13));
+		dr.getProfissoes().addAll(Arrays.asList(prof4, prof9, prof10, prof12, prof13));
 		
-		profissaoRepository.saveAll(Arrays.asList(prof1, prof2, prof3, prof4));
+		profissaoRepository.saveAll(Arrays.asList(prof1, prof2, prof3, prof4,
+				prof5, prof6, prof7, prof8, prof9, prof10, prof11, prof12, prof13));
 		profissionalRepository.saveAll(Arrays.asList(tec, adv, eng, dr));
 		
 		Estado est1 = new Estado(null, "Pernambuco");
@@ -126,8 +146,8 @@ public class ServicosprofApplication implements CommandLineRunner {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		
-		Chamado cha1 = new Chamado(null, sdf.parse("26/12/2021 13:45"), "Notebook não liga", cli1, end1);
-		Chamado cha2 = new Chamado(null, sdf.parse("26/12/2021 13:50"), "Ação trabalhista", cli1, end1);
+		Chamado cha1 = new Chamado(null, sdf.parse("26/12/2021 13:45"), "Notebook não liga", cli1,tec);
+		Chamado cha2 = new Chamado(null, sdf.parse("26/12/2021 13:50"), "Ação trabalhista", cli1,adv);
 		
 		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, cha1, 2);
 		cha1.setPagamento(pagto1);
@@ -140,8 +160,9 @@ public class ServicosprofApplication implements CommandLineRunner {
 		chamadoRepository.saveAll(Arrays.asList(cha1, cha2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
 		
-		ItemChamado ip1 = new ItemChamado(cha1, tec, new BigDecimal("0.00"), new BigDecimal("100.00"), 4);
-		ItemChamado ip2 = new ItemChamado(cha2, adv, new BigDecimal("0.00"), new BigDecimal("7000.00"), 3);
+		ItemChamado ip1 = new ItemChamado(cha1, tec, 10.00, 100.00, 4);
+		ItemChamado ip2 = new ItemChamado(cha2, adv, 200.00, 7000.00, 3);
+	
 		
 		cha1.getItens().addAll(Arrays.asList(ip1));
 		cha2.getItens().addAll(Arrays.asList(ip2));
@@ -150,6 +171,8 @@ public class ServicosprofApplication implements CommandLineRunner {
 		adv.getItens().addAll(Arrays.asList(ip2));
 		
 		itemChamadoRepository.saveAll(Arrays.asList(ip1, ip2));
+		
+		
 	}
 
 }

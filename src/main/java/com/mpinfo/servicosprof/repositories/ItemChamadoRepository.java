@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.mpinfo.servicosprof.domain.ItemChamado;
 
 @Repository
-public interface ItemChamadoRepository extends JpaRepository<ItemChamado, Long> {
+public interface ItemChamadoRepository extends JpaRepository<ItemChamado, Integer> {
 
 }

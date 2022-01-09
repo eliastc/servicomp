@@ -16,8 +16,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mpinfo.servicosprof.domain.enums.TipoClassificacao;
 
 @Entity
 public class Profissional implements Serializable{	
@@ -25,13 +25,16 @@ public class Profissional implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 	private String nome;	
 	private String celular;
+	private String endereco;
+	private String bairro;
 	private String formacao;
 	private Integer classificacao;
+	private Double valorHora;
 	
-	@JsonBackReference
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(
 			name = "PROFISSIONAL_PROFISSAO",
@@ -44,18 +47,22 @@ public class Profissional implements Serializable{
 	@OneToMany(mappedBy = "id.profissional")
 	private Set<ItemChamado> itens = new HashSet<>();
 	
-	
-	// talvez tenha que associar o chamado com o cliente e com o profissional
+	// talvez tenha que associar o chamado com o cliente e com o profissional, talvez nao precisa colocar
+	// endereco de entrega
 	public Profissional() {		
 	}
 
-	public Profissional(Long id, String nome, String celular, String formacao, Integer classificacao) {
+	public Profissional(Integer id, String nome, String celular, String endereco, String bairro,
+			String formacao, TipoClassificacao classificacao, Double valorHora) {
 		super();
 		this.id = id;
 		this.nome = nome;	
 		this.celular = celular;
+		this.endereco = endereco;
+		this.bairro = bairro;
 		this.formacao = formacao;
-		this.setClassificacao(classificacao);
+		this.classificacao = (classificacao == null) ? null : classificacao.getCod();
+		this.setValorHora(valorHora);
 	}
 
 	@JsonIgnore
@@ -67,11 +74,11 @@ public class Profissional implements Serializable{
 		return lista;
 	}
 	
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -89,6 +96,22 @@ public class Profissional implements Serializable{
 	
 	public void setCelular(String celular) {
 		this.celular = celular;
+	}	
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+	
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
 	}
 	
 	public String getFormacao() {
@@ -99,12 +122,12 @@ public class Profissional implements Serializable{
 		this.formacao = formacao;
 	}
 	
-	public Integer getClassificacao() {
-		return classificacao;
+	public TipoClassificacao getClassificacao() {
+		return TipoClassificacao.toEnum(classificacao);
 	}
 
-	public void setClassificacao(Integer classificacao) {
-		this.classificacao = classificacao;
+	public void setClassificacao(TipoClassificacao classificacao) {
+		this.classificacao = classificacao.getCod();
 	}
 	
 	public List<Profissao> getProfissoes() {
@@ -122,6 +145,14 @@ public class Profissional implements Serializable{
 
 	public void setItens(Set<ItemChamado> itens) {
 		this.itens = itens;
+	}	
+	
+	public Double getValorHora() {
+		return valorHora;
+	}
+
+	public void setValorHora(Double valorHora) {
+		this.valorHora = valorHora;
 	}
 	
 	@Override

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.mpinfo.servicosprof.domain.Pagamento;
 
 @Repository
-public interface PagamentoRepository extends JpaRepository<Pagamento, Long> {
+public interface PagamentoRepository extends JpaRepository<Pagamento, Integer> {
 
 }

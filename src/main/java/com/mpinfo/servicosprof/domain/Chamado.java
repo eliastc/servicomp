@@ -1,8 +1,10 @@
 package com.mpinfo.servicosprof.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,7 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Chamado implements Serializable{	
@@ -25,25 +27,28 @@ public class Chamado implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 	
 	@JsonFormat(pattern ="dd/MM/yyyy HH:mm")
 	private Date instante;
-	private String mensagem;
 	
-	@JsonManagedReference
+	private String mensagem;	
+	
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "chamado")	
 	private Pagamento pagamento;
-	
-	
-	@JsonManagedReference
+			
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
-	
+		
 	@ManyToOne
-	@JoinColumn(name = "entrega_id")
-	private Endereco enderecodeEntrega;
+	@JoinColumn(name = "profissional_id")
+	private Profissional profissional;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "chamado")
+	private List<Endereco> enderecos = new ArrayList<>();
+	
 	
 	@OneToMany(mappedBy = "id.chamado")
 	private Set<ItemChamado> itens = new HashSet<>();
@@ -53,21 +58,30 @@ public class Chamado implements Serializable{
 	public Chamado() {		
 	}
 
-	public Chamado(Long id, Date instante, String mensagem, Cliente cliente,
-			Endereco enderecodeEntrega) {
+	public Chamado(Integer id, Date instante, String mensagem, Cliente cliente, Profissional profissional) {
 		super();
 		this.id = id;
 		this.instante = instante;
 		this.mensagem = mensagem;		
-		this.cliente = cliente;
-		this.enderecodeEntrega = enderecodeEntrega;
+		this.cliente = cliente;		
+		this.profissional = profissional;
 	}
+	
+	public double getValorTotal() {
+		double soma = 0.0;
+		for(ItemChamado ic : itens) {
+			soma = soma + ic.getSubTotal();
+		}
+		
+		return soma;
+	}
+	
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -102,13 +116,22 @@ public class Chamado implements Serializable{
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
+	
 
-	public Endereco getEnderecodeEntrega() {
-		return enderecodeEntrega;
+	public Profissional getProfissional() {
+		return profissional;
 	}
 
-	public void setEnderecodeEntrega(Endereco enderecodeEntrega) {
-		this.enderecodeEntrega = enderecodeEntrega;
+	public void setProfissional(Profissional profissional) {
+		this.profissional = profissional;
+	}
+	
+	public List<Endereco> getEnderecos() {
+		return enderecos;
+	}
+
+	public void setEnderecos(List<Endereco> enderecos) {
+		this.enderecos = enderecos;
 	}
 
 	public Set<ItemChamado> getItens() {
@@ -135,4 +158,5 @@ public class Chamado implements Serializable{
 		Chamado other = (Chamado) obj;
 		return Objects.equals(id, other.id);
 	}
+
 }

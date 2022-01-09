@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.mpinfo.servicosprof.domain.Cidade;
 
 @Repository
-public interface CidadeRepository extends JpaRepository<Cidade, Long> {
+public interface CidadeRepository extends JpaRepository<Cidade, Integer> {
 
 }

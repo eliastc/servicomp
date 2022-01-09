@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.mpinfo.servicosprof.domain.Profissao;
 
 @Repository
-public interface ProfissaoRepository extends JpaRepository<Profissao, Long> {
+public interface ProfissaoRepository extends JpaRepository<Profissao, Integer> {
 
 }

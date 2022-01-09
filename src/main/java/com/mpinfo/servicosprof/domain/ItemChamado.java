@@ -1,7 +1,6 @@
 package com.mpinfo.servicosprof.domain;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 import javax.persistence.EmbeddedId;
@@ -10,21 +9,22 @@ import javax.persistence.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class ItemChamado implements Serializable{	
+public class ItemChamado implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@JsonIgnore
 	@EmbeddedId
 	private ItemChamadoPK id = new ItemChamadoPK();
-	
-	private BigDecimal desconto;
-	private BigDecimal valorHora;
+
+	private Double desconto;
+	private Double valorHora;
 	private Integer duracao;
-	
-	public ItemChamado() {		
+
+	public ItemChamado() {
 	}
 
-	public ItemChamado(Chamado chamado, Profissional profissional, BigDecimal desconto, BigDecimal valorHora, Integer duracao) {
+	public ItemChamado(Chamado chamado, Profissional profissional, Double desconto, Double valorHora,
+			Integer duracao) {
 		super();
 		id.setChamado(chamado);
 		id.setProfissional(profissional);
@@ -33,15 +33,28 @@ public class ItemChamado implements Serializable{
 		this.duracao = duracao;
 	}
 	
+	public double getSubTotal() {
+		return (valorHora - desconto) * duracao;
+	}
+	
+
 	@JsonIgnore
 	public Chamado getChamado() {
 		return id.getChamado();
 	}
 	
+	public void setChamado(Chamado chamado) {
+		id.setChamado(chamado);
+	}
+
 	public Profissional getProfissional() {
 		return id.getProfissional();
 	}
 
+	public void setProfissional(Profissional profissional) {
+		id.setProfissional(profissional);
+	}
+	
 	public ItemChamadoPK getId() {
 		return id;
 	}
@@ -50,19 +63,19 @@ public class ItemChamado implements Serializable{
 		this.id = id;
 	}
 
-	public BigDecimal getDesconto() {
+	public Double getDesconto() {
 		return desconto;
 	}
 
-	public void setDesconto(BigDecimal desconto) {
+	public void setDesconto(Double desconto) {
 		this.desconto = desconto;
 	}
 
-	public BigDecimal getValorHora() {
+	public Double getValorHora() {
 		return valorHora;
 	}
 
-	public void setValorHora(BigDecimal valorHora) {
+	public void setValorHora(Double valorHora) {
 		this.valorHora = valorHora;
 	}
 
