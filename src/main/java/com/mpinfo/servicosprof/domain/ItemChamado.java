@@ -1,6 +1,8 @@
 package com.mpinfo.servicosprof.domain;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.persistence.EmbeddedId;
@@ -103,5 +105,20 @@ public class ItemChamado implements Serializable {
 			return false;
 		ItemChamado other = (ItemChamado) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+		StringBuilder builder = new StringBuilder();
+		builder.append(getProfissional().getNome());
+		builder.append(", Duração:");
+		builder.append(getDuracao());
+		builder.append(", Valor da hora: ");
+		builder.append(nf.format(getValorHora()));
+		builder.append(", Subtotal: ");
+		builder.append(nf.format(getSubTotal()));
+		builder.append("\n");
+		return builder.toString();
 	}
 }

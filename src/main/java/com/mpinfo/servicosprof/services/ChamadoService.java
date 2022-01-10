@@ -35,6 +35,12 @@ public class ChamadoService {
 	@Autowired
 	private ProfissionalService profissionalService;
 	
+	@Autowired
+	private ClienteService clienteService;
+	
+	@Autowired
+	private EmailService emailService;
+	
 	public Chamado find(Integer id) {
 		Optional<Chamado> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ExcessaoNaoEncontradaException("Objeto não encontrado! Id: " + id +
@@ -45,6 +51,7 @@ public class ChamadoService {
 	public Chamado insert(Chamado obj) {
 		obj.setId(null);
 		obj.setInstante(new Date());
+		obj.setCliente(clienteService.find(obj.getCliente().getId()));
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setChamado(obj);
 		if(obj.getPagamento() instanceof PagamentoComPix) {
@@ -56,10 +63,12 @@ public class ChamadoService {
 		for(ItemChamado ic : obj.getItens()) {
 			ic.setDesconto(0.0);
 		//	ic.setDuracao(1); criar um metodo para calcular essa duracao
-			ic.setValorHora(profissionalService.find(ic.getProfissional().getId()).getValorHora());		
+			ic.setProfissional(profissionalService.find(ic.getProfissional().getId()));
+			ic.setValorHora(ic.getProfissional().getValorHora());		
 			ic.setChamado(obj);
 		}		
 		itemChamadoRepository.saveAll(obj.getItens());
+		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 	}
 }
