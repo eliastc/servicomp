@@ -40,11 +40,12 @@ public class Chamado implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
-		
+/*		
+	//testar post no postman tirando esse atributo 
 	@ManyToOne
 	@JoinColumn(name = "profissional_id")
 	private Profissional profissional;
-	
+*/	
 	@JsonIgnore
 	@OneToMany(mappedBy = "chamado")
 	private List<Endereco> enderecos = new ArrayList<>();
@@ -57,14 +58,14 @@ public class Chamado implements Serializable{
 	// talvez tenha que associar o chamado com o cliente e com o profissional
 	public Chamado() {		
 	}
-
-	public Chamado(Integer id, Date instante, String mensagem, Cliente cliente, Profissional profissional) {
+	//Profissional profissional no construtor
+	public Chamado(Integer id, Date instante, String mensagem, Cliente cliente) {
 		super();
 		this.id = id;
 		this.instante = instante;
 		this.mensagem = mensagem;		
 		this.cliente = cliente;		
-		this.profissional = profissional;
+	//	this.profissional = profissional;
 	}
 	
 	public double getValorTotal() {
@@ -117,7 +118,7 @@ public class Chamado implements Serializable{
 		this.cliente = cliente;
 	}
 	
-
+/*
 	public Profissional getProfissional() {
 		return profissional;
 	}
@@ -125,7 +126,7 @@ public class Chamado implements Serializable{
 	public void setProfissional(Profissional profissional) {
 		this.profissional = profissional;
 	}
-	
+	*/
 	public List<Endereco> getEnderecos() {
 		return enderecos;
 	}

@@ -13,7 +13,7 @@ public class PixService {
 	public void preencherPagamentoComPix(PagamentoComPix pagto, Date instanteDoChamado) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(instanteDoChamado);
-		cal.add(Calendar.DAY_OF_MONTH, 1);
+		cal.add(Calendar.HOUR, 1);
 		pagto.setDataVencimento(cal.getTime());
 	}
 }

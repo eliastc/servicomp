@@ -50,17 +50,15 @@ public class ChamadoService {
 		if(obj.getPagamento() instanceof PagamentoComPix) {
 			PagamentoComPix pagto = (PagamentoComPix) obj.getPagamento();
 			pixService.preencherPagamentoComPix(pagto, obj.getInstante());
-		}
-		
+		}		
 		obj = repo.save(obj);
 		pagamentoRepository.save(obj.getPagamento());
 		for(ItemChamado ic : obj.getItens()) {
 			ic.setDesconto(0.0);
-			ic.setValorHora(profissionalService.find(ic.getProfissional().getId()).getValorHora());
-		//	ic.setValorHora(ProfissionalService.find(ic.getProfissional().getId());
+		//	ic.setDuracao(1); criar um metodo para calcular essa duracao
+			ic.setValorHora(profissionalService.find(ic.getProfissional().getId()).getValorHora());		
 			ic.setChamado(obj);
-		}
-		
+		}		
 		itemChamadoRepository.saveAll(obj.getItens());
 		return obj;
 	}

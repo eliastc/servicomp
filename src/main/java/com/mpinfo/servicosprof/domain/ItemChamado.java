@@ -19,6 +19,7 @@ public class ItemChamado implements Serializable {
 	private Double desconto;
 	private Double valorHora;
 	private Integer duracao;
+	// contar a duracao apartir da chegado do profissional no cliente que sera contada(calculada) no final do atendimento.
 
 	public ItemChamado() {
 	}
