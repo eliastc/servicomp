@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title th:remove="all">Confirmacao de Chamado</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+	<div>
+		<h1>
+			Número do chamado: <span th:text="${chamado.id}"> </span>
+		</h1>
+		<p>
+			Instante: <span th:text="${#dates.format(chamado.instante, 'dd/MM/yyyy hh:mm')}"></span>
+		</p>
+		<p>
+			Cliente: <span th:text="${chamado.cliente.nome}"></span>
+		</p>		
+	<!--	<p>
+			Mensagem: <span th:text="${chamado.mensagem}"></span>
+		</p> -->
+		<p>
+			Situação do pagamento: <span th:text="${chamado.pagamento.estado.descricao}"></span>
+		</p>   
+		<h3>Detalhes:</h3>
+		<table border="1">
+			<tr>
+				<th>Profissional</th>
+				<th>Duracao</th>
+				<th>Valor hora</th>
+				<th>Subtotal</th>
+			</tr>
+			<tr th:each="item : ${chamado.itens}">
+				<td th:text="${item.profissional.nome}"></td>
+				<td th:text="${item.duracao}"></td> 
+				<td th:text="${#numbers.formatDecimal(item.profissional.valorHora, 0, 'POINT', 2,
+'COMMA')}"></td> 
+			<td th:text="${#numbers.formatDecimal(item.getSubTotal, 0, 'POINT', 2,
+'COMMA')}">getSubTotal</td>
+			</tr>
+		</table>
+		<p>
+			Valor Total: <span th:text="${#numbers.formatDecimal(chamado.getValorTotal, 0,
+'POINT', 2, 'COMMA')}"></span>
+		</p> 
+	</div>
+</body>
+
+</html>

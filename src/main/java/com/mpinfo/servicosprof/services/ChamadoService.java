@@ -46,7 +46,7 @@ public class ChamadoService {
 		return obj.orElseThrow(() -> new ExcessaoNaoEncontradaException("Objeto não encontrado! Id: " + id +
 				", Tipo: " + Chamado.class.getName()));
 		}
-	
+	//fazer na classe prof. os atributos hora inicio e hora fim para calcular o tempo de duracao
 	@Transactional
 	public Chamado insert(Chamado obj) {
 		obj.setId(null);
@@ -68,7 +68,7 @@ public class ChamadoService {
 			ic.setChamado(obj);
 		}		
 		itemChamadoRepository.saveAll(obj.getItens());
-		emailService.sendOrderConfirmationEmail(obj);
+		emailService.sendOrderConfirmationHtmlEmail(obj);
 		return obj;
 	}
 }

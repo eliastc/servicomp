@@ -22,7 +22,7 @@ import com.mpinfo.servicosprof.domain.enums.TipoClassificacao;
 @Entity
 public class Profissional implements Serializable{	
 	private static final long serialVersionUID = 1L;
-	
+	//acrescentar hora inicial do servico e hora final
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
