@@ -6,18 +6,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mpinfo.servicosprof.domain.enums.Perfil;
 import com.mpinfo.servicosprof.domain.enums.TipoClassificacao;
 import com.mpinfo.servicosprof.domain.enums.TipoCliente;
 
@@ -29,6 +32,9 @@ public class Cliente implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
+	
+	@JsonIgnore
+	private String senha;
 	
 	@Column(unique = true)
 	private String email;
@@ -44,19 +50,26 @@ public class Cliente implements Serializable{
 	@CollectionTable(name = "TELEFONE")
 	private Set<String> telefones = new HashSet<>();
 	
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name = "PERFIS")
+	private Set<Integer> perfis = new HashSet<>();
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "cliente")
 	private List<Chamado> chamados = new ArrayList<>();
 	
 	// talvez tenha que associar o chamado com o cliente e com o profissional
-	public Cliente() {		
+	public Cliente() {	
+		addPerfil(Perfil.CLIENTE);
 	}
 
-	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoClassificacao classificacao,
+	public Cliente(Integer id, String nome, String senha, String email, String cpfOuCnpj, TipoClassificacao classificacao,
 			TipoCliente tipo) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.senha = senha;
+		addPerfil(Perfil.CLIENTE);
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.classificacao = (classificacao == null) ? null : classificacao.getCod();
@@ -79,6 +92,14 @@ public class Cliente implements Serializable{
 		this.nome = nome;
 	}
 
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+	
 	public String getEmail() {
 		return email;
 	}
@@ -127,6 +148,14 @@ public class Cliente implements Serializable{
 		this.telefones = telefones;
 	}
 	
+	public Set<Perfil> getPerfis() {
+		return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
+	}
+	
+	public void addPerfil(Perfil perfil) {
+		perfis.add(perfil.getCod());
+	}
+	
 	public List<Chamado> getChamados() {
 		return chamados;
 	}
@@ -150,5 +179,5 @@ public class Cliente implements Serializable{
 			return false;
 		Cliente other = (Cliente) obj;
 		return Objects.equals(id, other.id);
-	}
+	}	
 }

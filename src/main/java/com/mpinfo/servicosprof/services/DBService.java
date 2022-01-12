@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mpinfo.servicosprof.domain.Chamado;
@@ -19,6 +20,7 @@ import com.mpinfo.servicosprof.domain.PagamentoComPix;
 import com.mpinfo.servicosprof.domain.Profissao;
 import com.mpinfo.servicosprof.domain.Profissional;
 import com.mpinfo.servicosprof.domain.enums.EstadoPagamento;
+import com.mpinfo.servicosprof.domain.enums.Perfil;
 import com.mpinfo.servicosprof.domain.enums.TipoClassificacao;
 import com.mpinfo.servicosprof.domain.enums.TipoCliente;
 import com.mpinfo.servicosprof.repositories.ChamadoRepository;
@@ -60,6 +62,9 @@ public class DBService {
 	
 	@Autowired
 	private ItemChamadoRepository itemChamadoRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder pe;
 	
 	public void instantiateTestDatabase() throws ParseException {
 		
@@ -128,20 +133,30 @@ public class DBService {
 		
 	//	Cliente cli1 = new Cliente(null, "Carlos", "carlos@gmail.com", "36378912377", TipoClassificacao.EXCELENTE, TipoCliente.PESSOAFISICA);
 		
-		Cliente cli1 = new Cliente(null, "Sede das Miudezas", "mpinformaticaltda@gmail.com", "02067185000185", TipoClassificacao.EXCELENTE, TipoCliente.PESSOAJURIDICA );
+		Cliente cli1 = new Cliente(null, "Sede das Miudezas", pe.encode("123"), "mpinformaticaltda@gmail.com", "02067185000185", TipoClassificacao.EXCELENTE, TipoCliente.PESSOAJURIDICA );
 		cli1.getTelefones().addAll(Arrays.asList("3339.0990", "9988776655"));
 		
+		Cliente cli2 = new Cliente(null, "Elias Teotonio", pe.encode("1234"), "eliasteocalado@gmail.com", "90101245688", TipoClassificacao.EXCELENTE, TipoCliente.PESSOAFISICA );
+		cli2.addPerfil(Perfil.ADMIN);
+		cli2.getTelefones().addAll(Arrays.asList("98824.3638"));
+		/*
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Chamado cha3 = new Chamado(null, sdf.parse("26/12/2021 13:45"), "Notebook não liga", cli1);
+		Chamado cha4 = new Chamado(null, sdf.parse("26/12/2021 13:50"), "Ação trabalhista", cli2);
+		*/
 		Endereco end1 = new Endereco(null, "Rua Guarabira", "192", "A", "Imbiribeira", "50.000-010", cli1, cid1);
+		Endereco end2 = new Endereco(null, "Av Caxangá", "192", "A", "Cordeiro", "50.000-010", cli2, cid1);
 		
 		cli1.getEnderecos().addAll(Arrays.asList(end1));
+		cli2.getEnderecos().addAll(Arrays.asList(end2));
 		
-		clienteRepository.saveAll(Arrays.asList(cli1));
-		enderecoRepository.saveAll(Arrays.asList(end1));
+		clienteRepository.saveAll(Arrays.asList(cli1, cli2));
+		enderecoRepository.saveAll(Arrays.asList(end1, end2));
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		
 		Chamado cha1 = new Chamado(null, sdf.parse("26/12/2021 13:45"), "Notebook não liga", cli1);
-		Chamado cha2 = new Chamado(null, sdf.parse("26/12/2021 13:50"), "Ação trabalhista", cli1);
+		Chamado cha2 = new Chamado(null, sdf.parse("26/12/2021 13:50"), "Ação trabalhista", cli2);
 		
 		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, cha1, 2);
 		cha1.setPagamento(pagto1);
@@ -149,7 +164,8 @@ public class DBService {
 		Pagamento pagto2 = new PagamentoComPix(null, EstadoPagamento.PENDENTE, cha2, sdf.parse("10/01/2022 15:00"));
 		cha2.setPagamento(pagto2);
 		
-		cli1.getChamados().addAll(Arrays.asList(cha1, cha2));
+		cli1.getChamados().addAll(Arrays.asList(cha1));
+		cli2.getChamados().addAll(Arrays.asList(cha2));
 		
 		chamadoRepository.saveAll(Arrays.asList(cha1, cha2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
